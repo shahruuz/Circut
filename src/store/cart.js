@@ -1,77 +1,49 @@
-'use client';
-
 import { create } from 'zustand';
-import { persist, createJSONStorage } from 'zustand/middleware';
+import { persist } from 'zustand/middleware';
 
 export const useCartStore = create(
   persist(
     (set, get) => ({
       items: [],
-
-      addItem: (product, options = {}) => {
-        const { quantity = 1, personalization = '' } = options;
-        const lineId = `${product.id}::${personalization}`;
-
+      addItem: (product, quantity = 1, customizations = {}) => {
         set((state) => {
-          const existing = state.items.find((item) => item.lineId === lineId);
-          if (existing) {
-            return {
-              items: state.items.map((item) =>
-                item.lineId === lineId
-                  ? { ...item, quantity: item.quantity + quantity }
-                  : item
-              ),
-            };
+          // Check if item with the exact same ID and customizations already exists
+          const existingIndex = state.items.findIndex(
+            (item) =>
+              item.id === product.id &&
+              JSON.stringify(item.customizations || {}) === JSON.stringify(customizations)
+          );
+
+          if (existingIndex > -1) {
+            const newItems = [...state.items];
+            newItems[existingIndex].quantity += quantity;
+            return { items: newItems };
           }
+
           return {
-            items: [
-              ...state.items,
-              {
-                lineId,
-                id: product.id,
-                slug: product.slug,
-                name: product.name,
-                price: product.price,
-                image: product.image,
-                personalization,
-                quantity,
-              },
-            ],
+            items: [...state.items, { ...product, quantity, customizations }],
           };
         });
       },
-
-      removeItem: (lineId) => {
+      removeItem: (index) => {
         set((state) => ({
-          items: state.items.filter((item) => item.lineId !== lineId),
+          items: state.items.filter((_, i) => i !== index),
         }));
       },
-
-      updateQuantity: (lineId, quantity) => {
-        if (quantity < 1) {
-          get().removeItem(lineId);
-          return;
-        }
-        set((state) => ({
-          items: state.items.map((item) =>
-            item.lineId === lineId ? { ...item, quantity } : item
-          ),
-        }));
+      updateQuantity: (index, quantity) => {
+        set((state) => {
+          const newItems = [...state.items];
+          if (quantity <= 0) {
+            return { items: newItems.filter((_, i) => i !== index) };
+          }
+          newItems[index].quantity = quantity;
+          return { items: newItems };
+        });
       },
-
       clearCart: () => set({ items: [] }),
-
-      getSubtotal: () => {
-        return get().items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-      },
-
-      getItemCount: () => {
-        return get().items.reduce((sum, item) => sum + item.quantity, 0);
-      },
     }),
     {
-      name: 'cutsheet-cart',
-      storage: createJSONStorage(() => localStorage),
+      name: 'cricut-cart-storage',
     }
   )
 );

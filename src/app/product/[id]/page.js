@@ -1,136 +1,178 @@
-import Image from 'next/image';
-import Link from 'next/link';
+'use client';
+
+import { useState, use } from 'react';
 import { notFound } from 'next/navigation';
-import { Star, Truck, ShieldCheck } from 'lucide-react';
-import { getProductBySlug, getRelatedProducts, products } from '@/lib/products';
-import { formatPrice } from '@/lib/utils';
-import ProductCard from '@/components/ProductCard';
-import AddToCartForm from './AddToCartForm';
-
-export function generateStaticParams() {
-  return products.map((p) => ({ id: p.slug }));
-}
-
-export function generateMetadata({ params }) {
-  const product = getProductBySlug(params.id);
-  if (!product) return {};
-  return {
-    title: product.name,
-    description: product.description,
-  };
-}
+import { products } from '@/lib/products';
+import { useCartStore } from '@/store/cart';
+import { ShoppingBag, Star, Check } from 'lucide-react';
+import Image from 'next/image';
 
 export default function ProductPage({ params }) {
-  const product = getProductBySlug(params.id);
-  if (!product) notFound();
+  const unwrappedParams = use(params);
+  const product = products.find((p) => p.slug === unwrappedParams.id);
 
-  const related = getRelatedProducts(product);
+  if (!product) {
+    notFound();
+  }
+
+  const addItem = useCartStore((state) => state.addItem);
+
+  const [quantity, setQuantity] = useState(1);
+  const [line1, setLine1] = useState('Hi');
+  const [line2, setLine2] = useState('Bye');
+  const [selectedColor, setSelectedColor] = useState(product.colorOptions?.[0] || '');
+  const [selectedDesign, setSelectedDesign] = useState(product.designOptions?.[0] || '');
+  const [added, setAdded] = useState(false);
+
+  const handleAddToCart = () => {
+    addItem(product, quantity, {
+      line1,
+      line2,
+      color: selectedColor,
+      design: selectedDesign,
+    });
+    setAdded(true);
+    setTimeout(() => setAdded(false), 2000);
+  };
 
   return (
-    <div className="container-page py-10">
-      <nav className="mb-6 text-sm text-ink-soft">
-        <Link href="/shop" className="hover:underline">Shop</Link>
-        <span className="mx-2">/</span>
-        <Link href={`/shop?category=${encodeURIComponent(product.category)}`} className="hover:underline">
-          {product.category}
-        </Link>
-        <span className="mx-2">/</span>
-        <span className="text-ink">{product.name}</span>
-      </nav>
+    <div className="max-w-7xl mx-auto px-4 py-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        {/* Left Column: Preview Box / Image Gallery */}
+        <div className="bg-gray-100 rounded-2xl p-8 flex flex-col items-center justify-center border border-gray-200">
+          <div className="text-2xl font-bold tracking-tight mb-6 text-gray-800">
+            {product.name} Preview
+          </div>
+          <div className="relative w-full h-80 rounded-xl overflow-hidden shadow-md bg-white p-4 flex items-center justify-center">
+            <Image
+              src={product.image}
+              alt={product.name}
+              fill
+              className="object-contain p-4"
+            />
+          </div>
+          <div className="mt-6 text-center text-sm text-gray-500">
+            Custom text preview: <span className="font-semibold text-gray-900">{line1} / {line2}</span> ({selectedColor}, {selectedDesign})
+          </div>
+        </div>
 
-      <div className="grid gap-10 lg:grid-cols-2">
-        {/* Gallery */}
+        {/* Right Column: Options & Controls */}
         <div>
-          <div className="card-sticker overflow-hidden p-3">
-            <div className="relative aspect-square overflow-hidden rounded-[0.9rem] bg-kraft-light">
-              <Image
-                src={product.gallery[0]}
-                alt={product.name}
-                fill
-                priority
-                sizes="(min-width: 1024px) 50vw, 100vw"
-                className="object-cover"
-              />
-              {product.badge && (
-                <span className="absolute left-4 top-4 rounded-full bg-mustard px-3 py-1 text-xs font-bold text-ink">
-                  {product.badge}
-                </span>
+          <h1 className="text-3xl font-extrabold text-gray-900">{product.name}</h1>
+          <div className="text-2xl font-bold text-emerald-600 mt-2">${product.price.toFixed(2)} USD</div>
+
+          {/* Quantity Selector */}
+          <div className="mt-6">
+            <label className="block text-sm font-medium text-gray-700 mb-2">Quantity</label>
+            <div className="flex items-center border border-gray-300 rounded-lg w-32 justify-between px-3 py-1.5">
+              <button
+                onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                className="text-gray-500 hover:text-black font-bold text-lg"
+              >
+                -
+              </button>
+              <span className="font-medium">{quantity}</span>
+              <button
+                onClick={() => setQuantity(quantity + 1)}
+                className="text-gray-500 hover:text-black font-bold text-lg"
+              >
+                +
+              </button>
+            </div>
+          </div>
+
+          {/* Personalization Inputs */}
+          {product.personalizable && (
+            <div className="mt-6 space-y-4 border-t border-gray-200 pt-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Line 1</label>
+                <input
+                  type="text"
+                  value={line1}
+                  onChange={(e) => setLine1(e.target.value)}
+                  maxLength={15}
+                  className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                  placeholder="Enter text for line 1"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Line 2 (Optional)</label>
+                <input
+                  type="text"
+                  value={line2}
+                  onChange={(e) => setLine2(e.target.value)}
+                  maxLength={15}
+                  className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                  placeholder="Enter text for line 2"
+                />
+              </div>
+
+              {/* Color Options */}
+              {product.colorOptions && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Color</label>
+                  <div className="flex flex-wrap gap-2">
+                    {product.colorOptions.map((color) => (
+                      <button
+                        key={color}
+                        onClick={() => setSelectedColor(color)}
+                        className={`px-4 py-2 rounded-lg border text-sm font-medium transition-all ${
+                          selectedColor === color
+                            ? 'border-emerald-600 bg-emerald-50 text-emerald-800 ring-2 ring-emerald-500'
+                            : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50'
+                        }`}
+                      >
+                        {color}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Design Options */}
+              {product.designOptions && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Design</label>
+                  <div className="grid grid-cols-2 gap-2">
+                    {product.designOptions.map((design) => (
+                      <button
+                        key={design}
+                        onClick={() => setSelectedDesign(design)}
+                        className={`px-4 py-2.5 rounded-lg border text-left text-sm font-medium transition-all ${
+                          selectedDesign === design
+                            ? 'border-emerald-600 bg-emerald-50 text-emerald-800 ring-2 ring-emerald-500'
+                            : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50'
+                        }`}
+                      >
+                        {design}
+                      </button>
+                    ))}
+                  </div>
+                </div>
               )}
             </div>
-          </div>
-          {product.gallery.length > 1 && (
-            <div className="mt-3 grid grid-cols-4 gap-3">
-              {product.gallery.slice(1).map((src) => (
-                <div key={src} className="relative aspect-square overflow-hidden rounded-xl border-2 border-ink">
-                  <Image src={src} alt={product.name} fill sizes="120px" className="object-cover" />
-                </div>
-              ))}
-            </div>
           )}
-        </div>
 
-        {/* Details + purchase */}
-        <div>
-          <p className="section-label">{product.category}</p>
-          <h1 className="mt-1 text-3xl font-bold sm:text-4xl">{product.name}</h1>
-
-          <div className="mt-3 flex items-center gap-2 text-sm">
-            <div className="flex items-center gap-1 text-mustard-dark">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <Star
-                  key={i}
-                  size={16}
-                  className={i < Math.round(product.rating) ? 'fill-mustard text-mustard' : 'text-kraft-dark'}
-                />
-              ))}
-            </div>
-            <span className="font-semibold text-ink-soft">
-              {product.rating} ({product.reviews} reviews)
-            </span>
-          </div>
-
-          <p className="mt-5 font-display text-3xl font-bold text-coral-dark">
-            {formatPrice(product.price)}
-          </p>
-
-          <p className="mt-5 text-ink-soft">{product.description}</p>
-
-          <ul className="mt-5 space-y-2 text-sm text-ink-soft">
-            {product.details.map((detail) => (
-              <li key={detail} className="flex items-start gap-2">
-                <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-coral" />
-                {detail}
-              </li>
-            ))}
-          </ul>
-
-          <div className="mt-8">
-            <AddToCartForm product={product} />
-          </div>
-
-          <div className="mt-8 grid gap-3 border-t-2 border-kraft pt-6 sm:grid-cols-2">
-            <div className="flex items-start gap-3 text-sm text-ink-soft">
-              <Truck size={20} className="shrink-0 text-teal" />
-              Ships in 2–4 business days. Free shipping over $45.
-            </div>
-            <div className="flex items-start gap-3 text-sm text-ink-soft">
-              <ShieldCheck size={20} className="shrink-0 text-teal" />
-              Arrived damaged or wrong? We reprint or refund, no questions asked.
-            </div>
-          </div>
+          {/* Add to Cart Button */}
+          <button
+            onClick={handleAddToCart}
+            className={`mt-8 w-full py-3.5 px-6 rounded-xl font-bold flex items-center justify-center gap-2 text-white transition-all shadow-lg ${
+              added ? 'bg-emerald-700' : 'bg-emerald-600 hover:bg-emerald-700'
+            }`}
+          >
+            {added ? (
+              <>
+                <Check className="w-5 h-5" /> Added to Cart!
+              </>
+            ) : (
+              <>
+                <ShoppingBag className="w-5 h-5" /> Add to Cart — ${(product.price * quantity).toFixed(2)}
+              </>
+            )}
+          </button>
         </div>
       </div>
-
-      {related.length > 0 && (
-        <section className="mt-16">
-          <h2 className="text-2xl font-bold">You might also like</h2>
-          <div className="mt-6 grid grid-cols-2 gap-5 sm:grid-cols-4">
-            {related.map((p) => (
-              <ProductCard key={p.id} product={p} />
-            ))}
-          </div>
-        </section>
-      )}
     </div>
   );
 }
