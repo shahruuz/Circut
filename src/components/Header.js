@@ -15,7 +15,9 @@ const NAV_LINKS = [
 export default function Header() {
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const itemCount = useCartStore((state) => state.getItemCount());
+  
+  // Safely guard the selector during initial server-side/client hydration
+  const itemCount = useCartStore((state) => (mounted ? state.getItemCount() : 0));
 
   useEffect(() => setMounted(true), []);
 
