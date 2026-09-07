@@ -1,0 +1,71 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-paper text-ink font-body;
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-display;
+  }
+
+  :focus-visible {
+    outline: 3px solid theme('colors.teal.DEFAULT');
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  /* A dashed "cut line" border, like a perforated sticker sheet edge */
+  .cut-line {
+    border: 2px dashed rgba(33, 28, 22, 0.35);
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 font-semibold
+           transition-transform duration-150 ease-out active:translate-y-0.5;
+  }
+
+  .btn-primary {
+    @apply btn bg-coral text-white shadow-cut-sm hover:bg-coral-dark;
+  }
+
+  .btn-secondary {
+    @apply btn bg-teal text-white shadow-cut-sm hover:bg-teal-dark;
+  }
+
+  .btn-outline {
+    @apply btn border-2 border-ink bg-transparent text-ink hover:bg-ink hover:text-paper;
+  }
+
+  .card-sticker {
+    @apply relative rounded-sticker bg-white shadow-cut transition-transform duration-200 ease-out;
+  }
+
+  .card-sticker:hover {
+    transform: translate(-2px, -2px);
+  }
+
+  .container-page {
+    @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .section-label {
+    @apply text-sm font-semibold tracking-wide text-teal-dark;
+  }
+}

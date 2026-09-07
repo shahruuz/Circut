@@ -1,0 +1,233 @@
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                    CRICUTCRAFT - QUICK REFERENCE CARD                        ║
+║                  E-Commerce Store Setup & Deployment Guide                   ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ STEP 1: PREPARE YOUR COMPUTER                                               │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ • Install Git: https://git-scm.com                                          │
+│ • Install Node.js: https://nodejs.org (18.x or 20.x LTS)                   │
+│ • Extract cricut-shop folder                                               │
+│ • Open Terminal/Command Prompt in cricut-shop folder                       │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ STEP 2: TEST LOCALLY                                                         │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ $ npm install                                                               │
+│ $ npm run dev                                                               │
+│ → Visit: http://localhost:3000                                             │
+│ → Stop: Press Ctrl+C                                                        │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ STEP 3: CUSTOMIZE (OPTIONAL)                                                 │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ Edit these files:                                                           │
+│ • src/lib/products.js → Update products                                    │
+│ • src/components/Footer.js → Update contact info                           │
+│ • tailwind.config.js → Change colors                                       │
+│ • public/images/ → Add your images                                         │
+│                                                                             │
+│ Then restart server:                                                        │
+│ $ npm run dev                                                               │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ STEP 4: UPLOAD TO GITHUB                                                     │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ 1. Create GitHub account: https://github.com/signup                        │
+│                                                                             │
+│ 2. Create personal token:                                                   │
+│    https://github.com/settings/tokens/new                                  │
+│    - Check: repo, workflow                                                  │
+│    - Copy token somewhere safe!                                            │
+│                                                                             │
+│ 3. Initialize Git:                                                          │
+│    $ git init                                                               │
+│    $ git config user.name "Your Name"                                      │
+│    $ git config user.email "your@email.com"                                │
+│                                                                             │
+│ 4. Add files:                                                               │
+│    $ git add .                                                              │
+│    $ git commit -m "Initial commit: CutSheet Co. store"                     │
+│                                                                             │
+│ 5. Create repo on GitHub:                                                   │
+│    https://github.com/new                                                   │
+│    - Name: cricut-shop                                                      │
+│    - Public                                                                 │
+│    - Create repository                                                      │
+│                                                                             │
+│ 6. Push to GitHub:                                                          │
+│    $ git remote add origin https://github.com/YOUR-NAME/cricut-shop.git   │
+│    $ git branch -M main                                                     │
+│    $ git push -u origin main                                                │
+│    → When prompted for password: Use your personal token!                  │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ STEP 5: DEPLOY TO VERCEL (Easiest!)                                          │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ 1. Go to: https://vercel.com/signup                                        │
+│ 2. Click: "Continue with GitHub"                                           │
+│ 3. Authorize Vercel                                                        │
+│ 4. Click: "Add New" → "Project"                                            │
+│ 5. Select: cricut-shop repository                                          │
+│ 6. Click: "Import"                                                         │
+│ 7. Click: "Deploy"                                                         │
+│ 8. Wait 2-3 minutes...                                                      │
+│ 9. Your site is LIVE! 🎉                                                   │
+│    → URL: https://cricut-shop.vercel.app                                   │
+│    → Or your custom domain (see STEP 6)                                    │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ STEP 6: ADD CUSTOM DOMAIN (OPTIONAL)                                         │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ 1. Buy domain:                                                              │
+│    • Namecheap: $0.88/year → namecheap.com                                 │
+│    • GoDaddy: $1/year → godaddy.com                                        │
+│                                                                             │
+│ 2. In Vercel:                                                               │
+│    → Settings → Domains → Add Domain                                       │
+│    → Enter your domain                                                      │
+│    → Copy DNS records shown                                                │
+│                                                                             │
+│ 3. In Domain Registrar:                                                     │
+│    → Manage Domain → Advanced DNS                                          │
+│    → Add CNAME record as shown in Vercel                                   │
+│    → Wait 24-48 hours for propagation                                      │
+│                                                                             │
+│ 4. Verify:                                                                  │
+│    → Visit: https://www.yourdomain.com                                     │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ GIT COMMANDS QUICK REFERENCE                                                 │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ $ git status                     → See what changed                         │
+│ $ git add .                      → Stage all changes                        │
+│ $ git commit -m "message"        → Save changes locally                     │
+│ $ git push origin main           → Upload to GitHub                        │
+│ $ git pull origin main           → Download from GitHub                    │
+│ $ git log --oneline              → View history                            │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ NPM COMMANDS QUICK REFERENCE                                                 │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ $ npm install                    → Install dependencies                     │
+│ $ npm run dev                    → Start development server                 │
+│ $ npm run build                  → Build for production                     │
+│ $ npm start                      → Run production build                     │
+│ $ npm run lint                   → Check code quality                       │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ PROJECT STRUCTURE                                                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ src/app/                         → Pages (home, shop, cart, etc)            │
+│ src/components/                  → Reusable components                      │
+│ src/lib/                         → Utilities and product data               │
+│ src/store/                       → Shopping cart state                      │
+│ public/                          → Images and static files                  │
+│ package.json                     → Dependencies                             │
+│ tailwind.config.js               → Styling configuration                    │
+│ next.config.js                   → Next.js settings                         │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ IMPORTANT FILES                                                               │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ README.md                        → Full documentation                       │
+│ QUICKSTART.md                    → Quick start guide                        │
+│ DEPLOYMENT.md                    → Detailed deployment options              │
+│ GITHUB_UPLOAD_GUIDE.md           → GitHub & upload instructions            │
+│ .gitignore                       → Files to exclude from git                │
+│ .env.example                     → Environment variables template           │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ TROUBLESHOOTING                                                               │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ Port 3000 in use?                                                           │
+│   $ npm run dev -- -p 3001                                                  │
+│                                                                             │
+│ Module errors?                                                              │
+│   $ rm -rf node_modules package-lock.json                                   │
+│   $ npm install                                                             │
+│                                                                             │
+│ Build fails?                                                                │
+│   $ npm run build                                                           │
+│   Check for errors in output                                               │
+│                                                                             │
+│ GitHub authentication fails?                                                │
+│   Use your personal token (not password)                                    │
+│   Generate new token: https://github.com/settings/tokens/new               │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ CUSTOMIZATION CHECKLIST                                                       │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ □ Update products in src/lib/products.js                                   │
+│ □ Update contact info in src/components/Footer.js                          │
+│ □ Change colors in tailwind.config.js                                      │
+│ □ Add your business logo                                                   │
+│ □ Add real product images                                                  │
+│ □ Test on mobile                                                           │
+│ □ Verify all links work                                                    │
+│ □ Test shopping cart                                                       │
+│ □ Update social media links                                                │
+│ □ Add Google Analytics (optional)                                          │
+│ □ Add Stripe payments (optional)                                           │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ LAUNCH TIMELINE                                                               │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ • 0-5 min     → Install dependencies                                        │
+│ • 5-10 min    → Test locally                                               │
+│ • 10-15 min   → Customize products/info                                    │
+│ • 15-20 min   → Upload to GitHub                                           │
+│ • 20-25 min   → Deploy to Vercel                                           │
+│ • 25-30 min   → Your site is LIVE! 🎉                                      │
+│ • 30-60 min   → Add custom domain (optional)                               │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ USEFUL LINKS                                                                  │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ GitHub:              https://github.com                                     │
+│ Vercel:              https://vercel.com                                     │
+│ Node.js:             https://nodejs.org                                     │
+│ Git:                 https://git-scm.com                                    │
+│ Stripe:              https://stripe.com (payments)                          │
+│ Namecheap:           https://namecheap.com (domains)                        │
+│ Next.js Docs:        https://nextjs.org/docs                               │
+│ Tailwind Docs:       https://tailwindcss.com                               │
+│ Status Page:         https://www.vercelstatus.com                          │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                                                                               ║
+║  CONGRATULATIONS! You have everything needed to launch your store! 🚀        ║
+║                                                                               ║
+║  Total time to live: ~30 minutes                                            ║
+║  Cost: FREE! (Vercel offers $50/month free credits)                         ║
+║  Skills needed: None! Just follow the steps above                           ║
+║                                                                               ║
+║  Next steps:                                                                 ║
+║  1. Follow steps 1-5 above                                                   ║
+║  2. Your store will be live!                                                │
+║  3. Start selling! 💰                                                        ║
+║                                                                               ║
+║  Questions? Read the included documentation files:                          ║
+║  • README.md - Full docs                                                     ║
+║  • QUICKSTART.md - Quick reference                                          ║
+║  • DEPLOYMENT.md - Detailed guide                                           ║
+║  • GITHUB_UPLOAD_GUIDE.md - Step-by-step                                    ║
+║                                                                               ║
+║  Happy selling! ✂️🎨                                                         ║
+║                                                                               ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
