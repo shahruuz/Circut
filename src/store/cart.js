@@ -41,6 +41,10 @@ export const useCartStore = create(
         });
       },
       clearCart: () => set({ items: [] }),
+      getItemCount: () => {
+        const state = get();
+        return state.items.reduce((total, item) => total + item.quantity, 0);
+      },
     }),
     {
       name: 'cricut-cart-storage',
